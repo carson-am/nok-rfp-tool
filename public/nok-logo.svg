@@ -1,0 +1,16 @@
+<svg width="640" height="320" viewBox="0 0 640 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="320" rx="24" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <text x="120" y="190" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="150" font-weight="800" fill="white" letter-spacing="-4">nok</text>
+    <text x="126" y="230" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="28" font-weight="700" fill="#F36B3B" letter-spacing="2">RECOMMERCE</text>
+  </g>
+  <defs>
+    <linearGradient id="bg" x1="40" y1="20" x2="580" y2="280" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3828C4"/>
+      <stop offset="1" stop-color="#0E0A35"/>
+    </linearGradient>
+    <filter id="shadow" x="100" y="60" width="420" height="200" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#0A0828" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+</svg>
