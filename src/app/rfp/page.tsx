@@ -592,7 +592,7 @@ export default function RfpFormPage() {
                 )}
 
                 {showExcessInventoryRegional && (
-                  <Field label='Which ones? (e.g., Ollie's, Gabe's, etc.)'>
+                  <Field label="Which ones? (e.g., Ollie's, Gabe's, etc.)">
                     <input
                       type="text"
                       className="input"
