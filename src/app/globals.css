@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f0b3a;
-  --surface: #16114c;
-  --card: #201a66;
-  --muted: #b6bff5;
-  --accent: #f36b3b;
-  --accent-strong: #ff7c40;
-  --border: #2f2a73;
+  --background: #0A0E27;
+  --surface: #0f172a;
+  --card: #1e293b;
+  --muted: #94a3b8;
+  --accent: #2563eb;
+  --accent-strong: #3b82f6;
+  --border: #334155;
   --foreground: #f7f8ff;
 }
 
@@ -23,9 +23,9 @@
 }
 
 body {
-  background: radial-gradient(circle at 15% 20%, #2c2493 0, rgba(44, 36, 147, 0) 25%),
-    radial-gradient(circle at 80% 0%, #3322c7 0, rgba(51, 34, 199, 0) 23%),
-    linear-gradient(135deg, #0f0b3a, #120f46 45%, #0d0a31);
+  background: radial-gradient(circle at 15% 20%, #1e3a8a 0, rgba(30, 58, 138, 0) 25%),
+    radial-gradient(circle at 80% 0%, #2563eb 0, rgba(37, 99, 235, 0) 23%),
+    linear-gradient(135deg, #0A0E27, #0f172a 45%, #020617);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
 }
@@ -35,7 +35,7 @@ a {
 }
 
 .card-surface {
-  background: linear-gradient(155deg, rgba(37, 30, 110, 0.9), rgba(22, 17, 76, 0.9));
+  background: linear-gradient(155deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
   border: 1px solid var(--border);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.35),
@@ -47,7 +47,7 @@ a {
   width: 100%;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(24, 17, 74, 0.7);
+  background: rgba(15, 23, 42, 0.7);
   padding: 12px 14px;
   color: #f6fbff;
   outline: none;
@@ -55,8 +55,8 @@ a {
 }
 
 .input:focus {
-  border-color: rgba(255, 124, 64, 0.8);
-  box-shadow: 0 0 0 1px rgba(255, 124, 64, 0.25);
+  border-color: rgba(37, 99, 235, 0.8);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
 }
 
 .btn {
@@ -67,9 +67,9 @@ a {
 }
 
 .btn.primary {
-  background: linear-gradient(120deg, #ff7c40, #f36b3b);
-  color: #0f0b3a;
-  box-shadow: 0 10px 30px rgba(243, 107, 59, 0.35);
+  background: linear-gradient(120deg, #2563eb, #3b82f6);
+  color: #ffffff;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
 }
 
 .btn.primary:hover {
@@ -79,9 +79,9 @@ a {
 .btn.ghost {
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f6fbff;
-  background: rgba(33, 26, 94, 0.6);
+  background: rgba(30, 41, 59, 0.6);
 }
 
 .btn.ghost:hover {
-  border-color: rgba(93, 212, 243, 0.6);
+  border-color: rgba(59, 130, 246, 0.6);
 }

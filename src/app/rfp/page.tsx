@@ -30,7 +30,7 @@ const steps: { id: StepId; title: string; blurb: string }[] = [
     id: "lead",
     title: "Lead Capture & Export",
     blurb:
-      "Share contact details and generate a consulting-grade Reverse Logistics RFP.",
+      "Share contact details and generate a Reverse Logistics RFP tailored to your operation.",
   },
 ];
 
@@ -193,10 +193,8 @@ export default function RfpFormPage() {
   };
 
   const handleStepClick = (idx: number) => {
-    // Only allow clicking on steps that have been visited
-    if (idx < stepIndex) {
-      setStepIndex(idx);
-    }
+    // Allow clicking any step for free navigation
+    setStepIndex(idx);
   };
 
   const leadReady = formValues.name.trim() && formValues.email.trim();
@@ -228,8 +226,7 @@ export default function RfpFormPage() {
           </h1>
           <p className="mt-3 max-w-3xl text-sm text-slate-200/80 sm:text-base">
             Capture the operational reality of your returns, align on
-            recommerce strategy, and export a consulting-grade brief. Optimized
-            for peak season returns strategy and enterprise stakeholders.
+            recommerce strategy, and translate insights into a decision-ready framework for peak season and enterprise leadership.
           </p>
         </header>
 
@@ -241,7 +238,7 @@ export default function RfpFormPage() {
         </div>
         <div className="mb-8 h-2 w-full overflow-hidden rounded-full bg-slate-800/80 ring-1 ring-white/10">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-sky-300 to-cyan-400 transition-all"
+            className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -444,7 +441,7 @@ export default function RfpFormPage() {
                       onChange={(e) =>
                         updateField("salesSplitDtc", Number(e.target.value))
                       }
-                      className="flex-1 accent-sky-300"
+                      className="flex-1 accent-blue-500"
                     />
                     <span className="w-24 text-right text-sm text-slate-200">
                       {formValues.salesSplitDtc}% DTC
@@ -457,11 +454,11 @@ export default function RfpFormPage() {
                     {channelOptions.map((channel) => (
                       <label
                         key={channel}
-                        className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-slate-900/40 px-3 py-3 text-sm text-slate-100 transition hover:border-sky-300/60"
+                        className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-slate-900/40 px-3 py-3 text-sm text-slate-100 transition hover:border-blue-500/60"
                       >
                         <input
                           type="checkbox"
-                          className="accent-sky-300"
+                          className="accent-blue-500"
                           checked={formValues.interestedChannels.includes(
                             channel,
                           )}
@@ -657,13 +654,10 @@ export default function RfpFormPage() {
                   </ul>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 rounded-xl border border-sky-300/30 bg-sky-300/10 p-4 text-sm text-sky-50">
-                  <span className="rounded-full bg-sky-300/25 px-3 py-1 text-xs uppercase tracking-wide text-sky-50">
+                <div className="flex flex-wrap items-center gap-3 rounded-xl border border-blue-500/30 bg-blue-500/10 p-4 text-sm text-blue-50">
+                  <span className="rounded-full bg-blue-500/25 px-3 py-1 text-xs uppercase tracking-wide text-blue-50">
                     Export ready
                   </span>
-                  <p className="text-slate-100">
-                    Provide Name + Email to enable the PDF download link.
-                  </p>
                 </div>
               </div>
             )}
@@ -688,21 +682,29 @@ export default function RfpFormPage() {
                 )}
               </div>
 
-              {currentStep.id === "lead" && (
-                <PDFDownloadLink
-                  document={<RfpPdf data={formValues} />}
-                  fileName="reverse-logistics-rfp.pdf"
+              <div className="flex gap-3 items-center">
+                {currentStep.id === "lead" && (
+                  <PDFDownloadLink
+                    document={<RfpPdf data={formValues} />}
+                    fileName="reverse-logistics-rfp.pdf"
+                  >
+                    {({ loading }) => (
+                      <button
+                        className="btn primary w-full sm:w-auto disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={!leadReady || loading}
+                      >
+                        {loading ? "Preparing PDF..." : "Download PDF"}
+                      </button>
+                    )}
+                  </PDFDownloadLink>
+                )}
+                <button
+                  onClick={handleStartOver}
+                  className="btn ghost text-xs"
                 >
-                  {({ loading }) => (
-                    <button
-                      className="btn primary w-full sm:w-auto disabled:cursor-not-allowed disabled:opacity-50"
-                      disabled={!leadReady || loading}
-                    >
-                      {loading ? "Preparing PDF..." : "Download PDF"}
-                    </button>
-                  )}
-                </PDFDownloadLink>
-              )}
+                  Start Over
+                </button>
+              </div>
             </div>
           </section>
 
@@ -717,23 +719,20 @@ export default function RfpFormPage() {
               {steps.map((step, idx) => {
                 const isActive = idx === stepIndex;
                 const isDone = idx < stepIndex;
-                const isVisited = idx <= stepIndex;
                 return (
                   <li
                     key={step.id}
                     onClick={() => handleStepClick(idx)}
-                    className={`rounded-xl border px-3 py-3 transition ${
+                    className={`rounded-xl border px-3 py-3 transition cursor-pointer ${
                       isActive
-                        ? "border-sky-300/80 bg-sky-300/10 text-white shadow-[0_0_8px_rgba(125,211,252,0.4)]"
-                        : isDone
-                          ? "cursor-pointer border-white/10 bg-slate-900/40 text-slate-200 hover:border-sky-300/40 hover:bg-slate-900/60"
-                          : "border-white/10 bg-slate-900/40 text-slate-200"
+                        ? "border-blue-500/80 bg-blue-500/10 text-white shadow-[0_0_8px_rgba(37,99,235,0.4)]"
+                        : "border-white/10 bg-slate-900/40 text-slate-200 hover:border-blue-500/40 hover:bg-slate-900/60"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{step.title}</span>
                       {isDone && (
-                        <span className="text-xs text-sky-200">Saved</span>
+                        <span className="text-xs text-blue-300">Saved</span>
                       )}
                     </div>
                     <p className="text-xs text-slate-300">{step.blurb}</p>
@@ -742,7 +741,7 @@ export default function RfpFormPage() {
               })}
             </ul>
 
-            <div className="rounded-xl border border-purple-300/30 bg-purple-400/15 p-4">
+            <div className="rounded-xl border border-blue-500/30 bg-blue-500/15 p-4">
               <div className="flex items-start gap-2">
                 <span className="text-lg">💡</span>
                 <div>
@@ -761,15 +760,6 @@ export default function RfpFormPage() {
               </div>
             </div>
           </aside>
-        </div>
-
-        <div className="mt-8 flex justify-center">
-          <button
-            onClick={handleStartOver}
-            className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            Start Over
-          </button>
         </div>
       </div>
     </div>
@@ -815,8 +805,8 @@ function RadioChip({
       onClick={onClick}
       className={`rounded-full border px-4 py-2 text-sm transition ${
         active
-          ? "border-sky-300 bg-sky-300/20 text-white shadow-[0_0_0_1px_rgba(94,234,212,0.3)]"
-          : "border-white/10 bg-slate-900/40 text-slate-200 hover:border-sky-200/50"
+          ? "border-blue-500 bg-blue-500/20 text-white shadow-[0_0_0_1px_rgba(37,99,235,0.3)]"
+          : "border-white/10 bg-slate-900/40 text-slate-200 hover:border-blue-400/50"
       }`}
     >
       {label}
