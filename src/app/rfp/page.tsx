@@ -208,8 +208,8 @@ export default function RfpFormPage() {
               <Image
                 src="/nok-logo.svg"
                 alt="Nok Recommerce"
-                width={140}
-                height={60}
+                width={180}
+                height={77}
                 priority
               />
               <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-200/90">
