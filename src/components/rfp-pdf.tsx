@@ -11,6 +11,7 @@ export type RfpFormValues = {
   seasonality: string;
   sellsIntoRetailers: string;
   retailerProgram: string;
+  currentReturnsHandling: string;
   returnsHandling: string;
   countries: string;
   warrantyProgram: string;
@@ -19,11 +20,15 @@ export type RfpFormValues = {
   subscriptionInterest: string;
   salesSplitDtc: number;
   interestedChannels: string[];
+  channelRestrictions: string;
   brandedDtc: string;
   brandedManagement: string;
   tradeIn: string;
   valuePriority: string;
   opportunityFeeling: string;
+  excessInventoryChannel: string;
+  excessInventoryNational: string;
+  excessInventoryRegional: string;
   excessInventory: string;
   combineStrategy: string;
   name: string;
@@ -79,7 +84,7 @@ const styles = StyleSheet.create({
 
   // Cover page styles
   coverTitle: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 700,
     color: colors.primary,
     marginBottom: 20,
@@ -262,6 +267,14 @@ const buildSections = (data: RfpFormValues): Section[] => [
             },
           ]
         : []),
+      ...(data.currentReturnsHandling
+        ? [
+            {
+              question: "Current returns handling",
+              answer: formatValue(data.currentReturnsHandling),
+            },
+          ]
+        : []),
       {
         question: "Returns handling process",
         answer: formatValue(data.returnsHandling),
@@ -309,6 +322,14 @@ const buildSections = (data: RfpFormValues): Section[] => [
         question: "Interested recommerce channels",
         answer: formatValue(data.interestedChannels),
       },
+      ...(data.channelRestrictions
+        ? [
+            {
+              question: "Channel restrictions",
+              answer: formatValue(data.channelRestrictions),
+            },
+          ]
+        : []),
       {
         question: "Branded second-hand DTC program interest",
         answer: formatValue(data.brandedDtc),
@@ -340,10 +361,40 @@ const buildSections = (data: RfpFormValues): Section[] => [
         question: "Current opportunity capture assessment",
         answer: formatValue(data.opportunityFeeling),
       },
-      {
-        question: "Excess inventory handling",
-        answer: formatValue(data.excessInventory),
-      },
+      ...(data.excessInventoryChannel
+        ? [
+            {
+              question: "Excess inventory sales channel",
+              answer: formatValue(data.excessInventoryChannel),
+            },
+            ...(data.excessInventoryChannel === "Off-Priced Retailers (National)" &&
+            data.excessInventoryNational
+              ? [
+                  {
+                    question: "National retailers",
+                    answer: formatValue(data.excessInventoryNational),
+                  },
+                ]
+              : []),
+            ...(data.excessInventoryChannel === "Off-Priced Retailers (Regional)" &&
+            data.excessInventoryRegional
+              ? [
+                  {
+                    question: "Regional retailers",
+                    answer: formatValue(data.excessInventoryRegional),
+                  },
+                ]
+              : []),
+          ]
+        : []),
+      ...(data.excessInventory && !data.excessInventoryChannel
+        ? [
+            {
+              question: "Excess inventory handling",
+              answer: formatValue(data.excessInventory),
+            },
+          ]
+        : []),
       {
         question: "Combine inventory & returns strategy",
         answer: formatValue(data.combineStrategy),

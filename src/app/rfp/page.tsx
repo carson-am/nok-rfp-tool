@@ -37,11 +37,21 @@ const steps: { id: StepId; title: string; blurb: string }[] = [
 const retailerTooltip =
   "DIF = Destroy in Field | ZVR = Zero Value Return | RTV = Return to Vendor";
 
+// Format number with commas for display
+const formatNumberWithCommas = (value: string): string => {
+  // Remove all non-digit characters
+  const numbers = value.replace(/\D/g, "");
+  if (numbers === "") return "";
+  // Add commas
+  return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 const initialValues: RfpFormValues = {
   returnsPerYear: "",
   seasonality: "Mostly flat",
   sellsIntoRetailers: "",
   retailerProgram: "",
+  currentReturnsHandling: "",
   returnsHandling: "",
   countries: "",
   warrantyProgram: "",
@@ -50,11 +60,15 @@ const initialValues: RfpFormValues = {
   subscriptionInterest: "",
   salesSplitDtc: 50,
   interestedChannels: [],
+  channelRestrictions: "",
   brandedDtc: "",
   brandedManagement: "",
   tradeIn: "",
   valuePriority: "",
   opportunityFeeling: "",
+  excessInventoryChannel: "",
+  excessInventoryNational: "",
+  excessInventoryRegional: "",
   excessInventory: "",
   combineStrategy: "",
   name: "",
@@ -103,6 +117,10 @@ export default function RfpFormPage() {
   const showWarrantyInterest = formValues.warrantyProgram === "No";
   const showSubscriptionInterest = formValues.subscriptionProgram === "No";
   const showBrandedFollowUp = formValues.brandedDtc === "Yes";
+  const showExcessInventoryNational =
+    formValues.excessInventoryChannel === "Off-Priced Retailers (National)";
+  const showExcessInventoryRegional =
+    formValues.excessInventoryChannel === "Off-Priced Retailers (Regional)";
 
   const canGoNext = useMemo(() => {
     if (currentStep.id === "lead") return true;
@@ -120,7 +138,7 @@ export default function RfpFormPage() {
       value: [
         "valuePriority",
         "opportunityFeeling",
-        "excessInventory",
+        "excessInventoryChannel",
         "combineStrategy",
       ],
       lead: [],
@@ -131,9 +149,19 @@ export default function RfpFormPage() {
     if (showWarrantyInterest) dynamicRequired.push("warrantyInterest");
     if (showSubscriptionInterest) dynamicRequired.push("subscriptionInterest");
     if (showBrandedFollowUp) dynamicRequired.push("brandedManagement");
+    if (
+      formValues.excessInventoryChannel === "Off-Priced Retailers (National)"
+    ) {
+      dynamicRequired.push("excessInventoryNational");
+    }
+    if (
+      formValues.excessInventoryChannel === "Off-Priced Retailers (Regional)"
+    ) {
+      dynamicRequired.push("excessInventoryRegional");
+    }
 
     const requiredFields =
-      currentStep.id === "general" || currentStep.id === "recommerce"
+      currentStep.id === "general" || currentStep.id === "recommerce" || currentStep.id === "value"
         ? [...baseRequired[currentStep.id], ...dynamicRequired]
         : baseRequired[currentStep.id];
 
@@ -157,6 +185,18 @@ export default function RfpFormPage() {
 
   const onBack = () => {
     if (stepIndex > 0) setStepIndex((v) => v - 1);
+  };
+
+  const handleStartOver = () => {
+    setFormValues(initialValues);
+    setStepIndex(0);
+  };
+
+  const handleStepClick = (idx: number) => {
+    // Only allow clicking on steps that have been visited
+    if (idx < stepIndex) {
+      setStepIndex(idx);
+    }
   };
 
   const leadReady = formValues.name.trim() && formValues.email.trim();
@@ -227,12 +267,12 @@ export default function RfpFormPage() {
                   helper="Approximate annualized return count."
                 >
                   <input
-                    type="number"
-                    min={0}
+                    type="text"
+                    inputMode="numeric"
                     className="input"
                     value={formValues.returnsPerYear}
                     onChange={(e) =>
-                      updateField("returnsPerYear", e.target.value)
+                      updateField("returnsPerYear", formatNumberWithCommas(e.target.value))
                     }
                   />
                 </Field>
@@ -288,7 +328,28 @@ export default function RfpFormPage() {
                   </Field>
                 )}
 
-                <Field label="If you’re receiving your returns back, what do you do with them?">
+                <Field label="What are you currently doing with your returns?">
+                  <select
+                    className="input"
+                    value={formValues.currentReturnsHandling}
+                    onChange={(e) =>
+                      updateField("currentReturnsHandling", e.target.value)
+                    }
+                  >
+                    <option value="">Select an option</option>
+                    <option value="ZVR (Zero Value Return)">
+                      ZVR (Zero Value Return)
+                    </option>
+                    <option value="RTV (Return to Vendor)">
+                      RTV (Return to Vendor)
+                    </option>
+                    <option value="DIF (Destroy in Field)">
+                      DIF (Destroy in Field)
+                    </option>
+                  </select>
+                </Field>
+
+                <Field label="If you're receiving your returns back, what do you do with them?">
                   <textarea
                     className="input min-h-[96px]"
                     value={formValues.returnsHandling}
@@ -412,6 +473,18 @@ export default function RfpFormPage() {
                   </div>
                 </Field>
 
+                <Field label="Do you have any channel restrictions?">
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="e.g., Amazon, eBay, TJX, etc."
+                    value={formValues.channelRestrictions}
+                    onChange={(e) =>
+                      updateField("channelRestrictions", e.target.value)
+                    }
+                  />
+                </Field>
+
                 <Field label="Would you be interested in a branded second-hand DTC program?">
                   <div className="flex gap-3">
                     {["Yes", "No"].map((option) => (
@@ -487,15 +560,49 @@ export default function RfpFormPage() {
                   </div>
                 </Field>
 
-                <Field label="What do you currently do with your excess inventory?">
-                  <textarea
-                    className="input min-h-[96px]"
-                    value={formValues.excessInventory}
-                    onChange={(e) =>
-                      updateField("excessInventory", e.target.value)
-                    }
-                  />
+                <Field label="Where do you currently sell your excess inventory?">
+                  <div className="flex gap-3">
+                    {[
+                      "Off-Priced Retailers (National)",
+                      "Off-Priced Retailers (Regional)",
+                    ].map((option) => (
+                      <RadioChip
+                        key={option}
+                        active={formValues.excessInventoryChannel === option}
+                        label={option}
+                        onClick={() =>
+                          updateField("excessInventoryChannel", option)
+                        }
+                      />
+                    ))}
+                  </div>
                 </Field>
+
+                {showExcessInventoryNational && (
+                  <Field label='Which ones? (e.g., TJX, Ross, etc.)'>
+                    <input
+                      type="text"
+                      className="input"
+                      value={formValues.excessInventoryNational}
+                      onChange={(e) =>
+                        updateField("excessInventoryNational", e.target.value)
+                      }
+                    />
+                  </Field>
+                )}
+
+                {showExcessInventoryRegional && (
+                  <Field label='Which ones? (e.g., Ollie's, Gabe's, etc.)'>
+                    <input
+                      type="text"
+                      className="input"
+                      value={formValues.excessInventoryRegional}
+                      onChange={(e) =>
+                        updateField("excessInventoryRegional", e.target.value)
+                      }
+                    />
+                  </Field>
+                )}
 
                 <Field label="Would you be interested in combining your excess inventory strategy with returns to create a broad recommerce strategy?">
                   <div className="flex gap-3">
@@ -610,13 +717,17 @@ export default function RfpFormPage() {
               {steps.map((step, idx) => {
                 const isActive = idx === stepIndex;
                 const isDone = idx < stepIndex;
+                const isVisited = idx <= stepIndex;
                 return (
                   <li
                     key={step.id}
-                    className={`rounded-xl border px-3 py-3 ${
+                    onClick={() => handleStepClick(idx)}
+                    className={`rounded-xl border px-3 py-3 transition ${
                       isActive
-                        ? "border-sky-300/60 bg-sky-300/10 text-white"
-                        : "border-white/10 bg-slate-900/40 text-slate-200"
+                        ? "border-sky-300/80 bg-sky-300/10 text-white shadow-[0_0_8px_rgba(125,211,252,0.4)]"
+                        : isDone
+                          ? "cursor-pointer border-white/10 bg-slate-900/40 text-slate-200 hover:border-sky-300/40 hover:bg-slate-900/60"
+                          : "border-white/10 bg-slate-900/40 text-slate-200"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -631,17 +742,34 @@ export default function RfpFormPage() {
               })}
             </ul>
 
-            <div className="rounded-xl border border-sky-300/30 bg-sky-300/10 p-4">
-              <p className="text-sm font-semibold text-white">
-                SEO spotlight
-              </p>
-              <p className="mt-2 text-xs text-slate-200">
-                Optimized for “Reverse Logistics RFP creation” and “Peak Season
-                Returns Strategy.” High-trust copy and structured fields help
-                organic visitors convert.
-              </p>
+            <div className="rounded-xl border border-purple-300/30 bg-purple-400/15 p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-lg">💡</span>
+                <div>
+                  <p className="text-sm font-semibold text-white">Pro Tip</p>
+                  <p className="mt-2 text-xs text-slate-200">
+                    {currentStep.id === "general" &&
+                      "Understanding your baseline logistics operations—volume patterns, seasonality, and existing programs—is crucial for building a successful Reverse Logistics RFP. This foundation helps potential partners tailor solutions to your specific operational context."}
+                    {currentStep.id === "recommerce" &&
+                      "Effective recommerce strategy requires clear channel diversification and ownership models. Defining your channel preferences and restrictions upfront enables partners to propose solutions that align with your business goals and operational constraints."}
+                    {currentStep.id === "value" &&
+                      "Identifying value drivers and opportunity gaps reveals where optimization can have the greatest impact. Clear articulation of priorities helps partners design programs that maximize value recovery while addressing your specific constraints."}
+                    {currentStep.id === "lead" &&
+                      "This RFP document captures your complete reverse logistics context. Share it with potential partners to accelerate conversations and ensure proposals address your specific operational needs from day one."}
+                  </p>
+                </div>
+              </div>
             </div>
           </aside>
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={handleStartOver}
+            className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
+          >
+            Start Over
+          </button>
         </div>
       </div>
     </div>
