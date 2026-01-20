@@ -30,7 +30,7 @@ const steps: { id: StepId; title: string; blurb: string }[] = [
     id: "lead",
     title: "Lead Capture & Export",
     blurb:
-      "Share contact details and generate a Reverse Logistics RFP tailored to your operation.",
+      "Share contact details and generate an RFP tailored to your operation.",
   },
 ];
 
@@ -216,9 +216,6 @@ export default function RfpFormPage() {
                 Recommerce strategy
               </span>
             </div>
-            <p className="text-xs uppercase tracking-[0.35em] text-orange-200/90">
-              Reverse Logistics RFP creation
-            </p>
           </div>
 
           <h1 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
@@ -252,9 +249,6 @@ export default function RfpFormPage() {
                 </p>
                 <p className="text-sm text-slate-300/80">{currentStep.blurb}</p>
               </div>
-              <span className="rounded-full bg-orange-400/15 px-3 py-1 text-xs text-orange-100 ring-1 ring-orange-300/40">
-                Nok Recommerce
-              </span>
             </div>
 
             {currentStep.id === "general" && (
@@ -632,7 +626,7 @@ export default function RfpFormPage() {
                     <input
                       className="input"
                       type="email"
-                      placeholder="Work email"
+                      placeholder="Email"
                       value={formValues.email}
                       onChange={(e) => updateField("email", e.target.value)}
                     />
@@ -642,10 +636,6 @@ export default function RfpFormPage() {
                 <div className="rounded-xl border border-white/10 bg-slate-900/40 p-4 text-sm text-slate-200">
                   <p className="font-semibold text-white">
                     Reverse Logistics Strategic RFP
-                  </p>
-                  <p className="mt-1 text-slate-300">
-                    Your answers will be formatted into a consulting-grade PDF
-                    with Nok’s footer note and outreach expectation.
                   </p>
                   <ul className="mt-3 space-y-1 text-slate-200">
                     <li>• Summary by section</li>
@@ -686,7 +676,11 @@ export default function RfpFormPage() {
                 {currentStep.id === "lead" && (
                   <PDFDownloadLink
                     document={<RfpPdf data={formValues} />}
-                    fileName="reverse-logistics-rfp.pdf"
+                    fileName={
+                      formValues.name.trim()
+                        ? `${formValues.name.trim().replace(/\s+/g, "-")}-RFP.pdf`
+                        : "RFP.pdf"
+                    }
                   >
                     {({ loading }) => (
                       <button

@@ -508,14 +508,13 @@ const buildSections = (data: RfpFormValues): Section[] => {
 const PageHeader = () => (
   <View style={styles.header} fixed>
     <Text style={styles.logoText}>Nok Recommerce</Text>
-    <Text style={styles.confidentialTag}>Confidential RFP Document</Text>
   </View>
 );
 
 // Footer component (appears on every page with fixed prop)
 const PageFooter = () => (
   <View style={styles.footer} fixed>
-    <Text style={styles.confidentialFooter}>Confidential RFP Document</Text>
+    <Text style={styles.confidentialFooter}>Confidential</Text>
   </View>
 );
 
@@ -628,15 +627,19 @@ export function RfpPdf({ data }: { data: RfpFormValues }) {
       {/* Cover Page */}
       <CoverPage clientName={data.name || ""} />
 
-      {/* Content Pages - @react-pdf/renderer automatically handles page breaks */}
+      {/* Each section on its own page */}
+      {sections.map((section) => (
+        <Page key={section.number} size="A4" style={styles.contentPage}>
+          <PageHeader />
+          <PageFooter />
+          <SectionContent section={section} />
+        </Page>
+      ))}
+      
+      {/* Strategic Considerations on its own page */}
       <Page size="A4" style={styles.contentPage}>
         <PageHeader />
         <PageFooter />
-        
-        {sections.map((section) => (
-          <SectionContent key={section.number} section={section} />
-        ))}
-        
         <StrategicConsiderationsSection />
       </Page>
     </Document>
