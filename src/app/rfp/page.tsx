@@ -215,8 +215,8 @@ export default function RfpFormPage() {
               <Image
                 src="/nok-logo.svg"
                 alt="Nok Recommerce"
-                width={180}
-                height={77}
+                width={280}
+                height={120}
                 priority
               />
               <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-200/90">
@@ -633,8 +633,8 @@ export default function RfpFormPage() {
             {currentStep.id === "lead" && (
               <div className="space-y-4">
                 <Field
-                  label="Before we generate your PDF, who should receive it?"
-                  helper="We’ll include these details in the footer for continuity."
+                  label="Before we generate your RFP, who should receive it?"
+                  helper="We'll include these details in the footer for continuity."
                 >
                   <div className="grid gap-3 sm:grid-cols-2">
                     <input
