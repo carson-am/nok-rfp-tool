@@ -634,13 +634,26 @@ export default function RfpFormPage() {
                 </Field>
 
                 <div className="rounded-xl border border-white/10 bg-slate-900/40 p-4 text-sm text-slate-200">
-                  <p className="font-semibold text-white">
+                  <p className="text-base font-bold text-white">
                     Reverse Logistics Strategic RFP
                   </p>
-                  <ul className="mt-3 space-y-1 text-slate-200">
-                    <li>• Summary by section</li>
-                    <li>• Your contact details in the footer</li>
-                    <li>• Ready for enterprise review</li>
+                  <ul className="mt-4 space-y-3 text-slate-100">
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 text-blue-400">✓</span>
+                      <span>Operational Baseline Audit: A detailed synthesis of your annual returns volume, seasonality trends, and current retail program footprint (DIF/ZVR/RTV).</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 text-blue-400">✓</span>
+                      <span>Recommerce Channel Roadmap: A strategic mapping of your interest in DTC, Trade-In, and Off-Price channels against your specific brand restrictions.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 text-blue-400">✓</span>
+                      <span>Opportunity & Value Assessment: A gap analysis of your current returns handling versus your stated priorities (Environmental, Financial, and Customer Loyalty).</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="mt-0.5 text-blue-400">✓</span>
+                      <span>Decision-Ready Framework: A professional assessment formatted for executive stakeholders to align on peak season strategy and recommerce maturity.</span>
+                    </li>
                   </ul>
                 </div>
 
