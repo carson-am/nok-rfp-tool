@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useMemo, useState } from "react";
+import { Info } from "lucide-react";
 import { RfpPdf, type RfpFormValues } from "@/components/rfp-pdf";
 
 type StepId = "general" | "recommerce" | "value" | "lead";
@@ -36,6 +37,12 @@ const steps: { id: StepId; title: string; blurb: string }[] = [
 
 const retailerTooltip =
   "DIF = Destroy in Field | ZVR = Zero Value Return | RTV = Return to Vendor";
+
+const programDefinitions = {
+  DIF: "Destroy in Field. The retailer destroys the product on-site instead of shipping it back, usually for a financial credit.",
+  ZVR: "Zero Value Return. Items are returned to the retailer but deemed to have no recovery value; they are typically recycled or disposed of by the retailer.",
+  RTV: "Return to Vendor. Items are shipped back to the brand's facility or 3PL for grading and potential recovery.",
+};
 
 // Format number with commas for display
 const formatNumberWithCommas = (value: string): string => {
@@ -300,10 +307,33 @@ export default function RfpFormPage() {
                 </Field>
 
                 {showRetailProgram && (
-                  <Field
-                    label="If Yes, what program do you run?"
-                    helper={retailerTooltip}
-                  >
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-white">
+                        If Yes, what program do you run?
+                      </p>
+                      <div className="group relative">
+                        <Info className="h-4 w-4 text-slate-400 cursor-help" />
+                        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-50 w-64">
+                          <div className="bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-lg">
+                            <div className="text-xs text-slate-100 space-y-2">
+                              <div>
+                                <span className="font-semibold text-white">DIF:</span>{" "}
+                                {programDefinitions.DIF}
+                              </div>
+                              <div>
+                                <span className="font-semibold text-white">ZVR:</span>{" "}
+                                {programDefinitions.ZVR}
+                              </div>
+                              <div>
+                                <span className="font-semibold text-white">RTV:</span>{" "}
+                                {programDefinitions.RTV}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <select
                       className="input"
                       value={formValues.retailerProgram}
@@ -312,32 +342,22 @@ export default function RfpFormPage() {
                       }
                     >
                       <option value="">Select a program</option>
-                      {["DIF", "ZVR", "RTV"].map((option) => (
-                        <option key={option}>{option}</option>
-                      ))}
+                      <option value="DIF">DIF - Destroy in Field</option>
+                      <option value="ZVR">ZVR - Zero Value Return</option>
+                      <option value="RTV">RTV - Return to Vendor</option>
                     </select>
-                  </Field>
+                  </div>
                 )}
 
-                <Field label="What are you currently doing with your returns?">
-                  <select
-                    className="input"
+                <Field label="For returns that are sent back to you (e.g., DTC or RTV), what is your current process for handling them?">
+                  <textarea
+                    className="input min-h-[96px]"
+                    placeholder="e.g., We receive them at our main warehouse, but we struggle to grade and restock them quickly..."
                     value={formValues.currentReturnsHandling}
                     onChange={(e) =>
                       updateField("currentReturnsHandling", e.target.value)
                     }
-                  >
-                    <option value="">Select an option</option>
-                    <option value="ZVR (Zero Value Return)">
-                      ZVR (Zero Value Return)
-                    </option>
-                    <option value="RTV (Return to Vendor)">
-                      RTV (Return to Vendor)
-                    </option>
-                    <option value="DIF (Destroy in Field)">
-                      DIF (Destroy in Field)
-                    </option>
-                  </select>
+                  />
                 </Field>
 
                 <Field label="If you're receiving your returns back, what do you do with them?">
