@@ -35,28 +35,13 @@ export type RfpFormValues = {
   email: string;
 };
 
-type QAPair = {
-  question: string;
-  answer: string;
-};
 
-type Section = {
-  title: string;
-  number: number;
-  expertPerspective?: string;
-  qaPairs: QAPair[];
-  insight?: string;
-};
-
-// Professional Slate/Navy color palette
+// Professional white background with black/deep navy text
 const colors = {
-  primary: "#1e293b", // slate-800
-  primaryAlt: "#334155", // slate-700
-  bodyText: "#334155", // slate-700
-  bodyTextAlt: "#475569", // slate-600
-  muted: "#64748b", // slate-500
-  mutedAlt: "#94a3b8", // slate-400
-  border: "#EEEEEE", // Light gray for borders
+  primary: "#0A0E27", // Deep navy
+  bodyText: "#000000", // Black
+  bodyTextAlt: "#0A0E27", // Deep navy
+  muted: "#666666", // Gray for muted text
 };
 
 const styles = StyleSheet.create({
@@ -66,19 +51,14 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
     fontSize: 10,
     color: colors.bodyText,
-  },
-  coverPage: {
-    padding: 60,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: "100%",
+    backgroundColor: "#FFFFFF",
   },
   contentPage: {
-    paddingTop: 70,
-    paddingBottom: 50,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingTop: 80,
+    paddingBottom: 70,
+    paddingLeft: 50,
+    paddingRight: 50,
+    backgroundColor: "#FFFFFF",
   },
 
   // Cover page styles
@@ -130,19 +110,15 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     paddingLeft: 50,
     paddingRight: 50,
-    borderBottom: `1pt solid ${colors.border}`,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
+    backgroundColor: "#FFFFFF",
   },
   logoText: {
     fontSize: 14,
     fontWeight: 700,
     color: colors.primary,
-  },
-  confidentialTag: {
-    fontSize: 9,
-    color: colors.muted,
   },
   footer: {
     position: "absolute",
@@ -153,104 +129,60 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     paddingLeft: 50,
     paddingRight: 50,
-    borderTop: `1pt solid ${colors.border}`,
     flexDirection: "row",
     justifyContent: "center",
-  },
-  pageNumber: {
-    fontSize: 9,
-    color: colors.muted,
+    backgroundColor: "#FFFFFF",
   },
   confidentialFooter: {
-    fontSize: 9,
-    color: colors.muted,
+    fontSize: 8,
+    color: colors.bodyText,
   },
 
   // Section styles
-  section: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: 700,
-    color: colors.primary,
-    marginBottom: 12,
-  },
-  expertPerspective: {
-    fontSize: 10,
-    fontStyle: "italic",
-    color: colors.bodyTextAlt,
-    marginBottom: 20,
-    padding: 12,
-    paddingTop: 12,
-    paddingBottom: 12,
-    borderLeft: `3pt solid ${colors.primary}`,
-    lineHeight: 1.6,
-  },
-
-  // Q&A two-column table layout
-  qaContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 5,
-    minHeight: 20,
-  },
-  questionColumn: {
-    width: "40%",
-    paddingRight: 12,
-  },
-  answerColumn: {
-    width: "60%",
-    paddingLeft: 8,
-  },
-  questionText: {
-    fontSize: 10,
+  mainSectionTitle: {
+    fontSize: 16,
     fontWeight: "bold",
     color: colors.bodyText,
-    lineHeight: 1.5,
+    marginBottom: 16,
+    marginTop: 8,
   },
-  answerText: {
-    fontSize: 10,
+  subSectionTitle: {
+    fontSize: 12,
+    fontWeight: "bold",
     color: colors.bodyText,
-    lineHeight: 1.6,
-  },
-  // Insight text
-  insightText: {
-    fontSize: 9,
-    fontStyle: "italic",
-    color: colors.bodyTextAlt,
+    marginBottom: 12,
     marginTop: 16,
-    paddingTop: 8,
-    borderTop: `1pt solid ${colors.border}`,
-    lineHeight: 1.6,
   },
-
-  // Strategic Considerations section
-  strategicSection: {
-    marginTop: 30,
-  },
-  strategicIntro: {
+  bodyText: {
     fontSize: 10,
     color: colors.bodyText,
     lineHeight: 1.7,
-    marginBottom: 16,
+    marginBottom: 12,
+    textAlign: "justify",
   },
-  nextStepItem: {
+  bulletPoint: {
     fontSize: 10,
     color: colors.bodyText,
     lineHeight: 1.7,
     marginBottom: 8,
-    paddingLeft: 8,
+    paddingLeft: 12,
   },
-  strategicFooter: {
-    fontSize: 9,
+  bulletList: {
+    marginBottom: 16,
+  },
+  italicText: {
+    fontSize: 10,
     fontStyle: "italic",
-    color: colors.bodyTextAlt,
-    marginTop: 20,
-    paddingTop: 12,
-    borderTop: `1pt solid ${colors.border}`,
-    lineHeight: 1.6,
+    color: colors.bodyText,
+    lineHeight: 1.7,
+    marginTop: 16,
+    marginBottom: 12,
+  },
+  companyName: {
+    fontSize: 10,
+    fontWeight: "bold",
+    color: colors.bodyText,
+    marginBottom: 16,
   },
 });
 
@@ -293,218 +225,45 @@ const formatValue = (value: string | number | string[] | undefined): string => {
   return expandAcronym(value);
 };
 
-// Generate insight based on section data
-const generateInsight = (sectionNumber: number, data: RfpFormValues): string | undefined => {
-  switch (sectionNumber) {
-    case 1: // Company & Operational Overview
-      const returnsNum = parseInt(data.returnsPerYear.replace(/,/g, "")) || 0;
-      if (returnsNum > 100000) {
-        return "Note: High annual return volumes suggest that small gains in processing efficiency will yield significant enterprise-level cost savings.";
-      }
-      break;
-    case 2: // Reverse Logistics & Returns Operations
-      if (data.sellsIntoRetailers === "Yes") {
-        return "Note: Retailer partnerships require aligned return handling processes to maintain channel relationships.";
-      }
-      break;
-    case 3: // Recommerce & Channel Strategy
-      if (data.salesSplitDtc > 50) {
-        return "Note: High DTC mix creates opportunity for direct consumer relationships through recommerce channels.";
-      }
-      break;
-    case 4: // Value Drivers & Opportunity Assessment
-      if (data.opportunityFeeling === "No") {
-        return "Note: Recognizing gaps in current opportunity capture indicates readiness for strategic enhancement.";
-      }
-      break;
+// Convert Yes/No to narrative sentences
+const convertYesNo = (value: string, program: string): string => {
+  if (value === "Yes") {
+    return `The brand currently operates a ${program} program.`;
   }
-  return undefined;
+  if (value === "No") {
+    return `The brand does not currently operate a ${program} program.`;
+  }
+  return "";
 };
 
-// Build sections with Q&A pairs
-const buildSections = (data: RfpFormValues): Section[] => {
-  const section1: Section = {
-    title: "Company & Operational Overview",
-    number: 1,
-    expertPerspective:
-      "A robust reverse logistics strategy begins with understanding baseline operational context. Volume patterns, seasonality, and existing program infrastructure set the foundation for scalable recommerce solutions.",
-    qaPairs: [
-      {
-        question: "Annual return volume",
-        answer: formatValue(data.returnsPerYear),
-      },
-      {
-        question: "Seasonality pattern",
-        answer: formatValue(data.seasonality),
-      },
-      {
-        question: "Operating countries",
-        answer: formatValue(data.countries),
-      },
-      {
-        question: "Warranty program",
-        answer: formatValue(data.warrantyProgram),
-      },
-      ...(data.warrantyProgram === "No" && data.warrantyInterest
-        ? [
-            {
-              question: "Interest in warranty program",
-              answer: formatValue(data.warrantyInterest),
-            },
-          ]
-        : []),
-      {
-        question: "Subscription program",
-        answer: formatValue(data.subscriptionProgram),
-      },
-      ...(data.subscriptionProgram === "No" && data.subscriptionInterest
-        ? [
-            {
-              question: "Interest in subscription program",
-              answer: formatValue(data.subscriptionInterest),
-            },
-          ]
-        : []),
-    ],
-    insight: generateInsight(1, data),
-  };
-
-  const section2: Section = {
-    title: "Reverse Logistics & Returns Operations",
-    number: 2,
-    expertPerspective:
-      "Effective reverse logistics operations require clear processes for handling returns across channels. Understanding current return handling methods and retailer relationships enables optimization of the returns pipeline.",
-    qaPairs: [
-      {
-        question: "Sell into retailers",
-        answer: formatValue(data.sellsIntoRetailers),
-      },
-      ...(data.sellsIntoRetailers === "Yes" && data.retailerProgram
-        ? [
-            {
-              question: "Retailer program",
-              answer: formatValue(data.retailerProgram),
-            },
-          ]
-        : []),
-      ...(data.currentReturnsHandling
-        ? [
-            {
-              question: "Current returns handling",
-              answer: formatValue(data.currentReturnsHandling),
-            },
-          ]
-        : []),
-      {
-        question: "Returns handling process",
-        answer: formatValue(data.returnsHandling),
-      },
-    ],
-    insight: generateInsight(2, data),
-  };
-
-  const section3: Section = {
-    title: "Recommerce & Channel Strategy",
-    number: 3,
-    expertPerspective:
-      "Effective recommerce requires channel diversification and clear ownership models. Understanding DTC vs. retail mix and channel preferences enables tailored strategies that maximize value recovery.",
-    qaPairs: [
-      {
-        question: "Sales split: DTC vs. retail (%)",
-        answer: `${formatValue(data.salesSplitDtc)}% DTC`,
-      },
-      {
-        question: "Interested recommerce channels",
-        answer: formatValue(data.interestedChannels),
-      },
-      ...(data.channelRestrictions
-        ? [
-            {
-              question: "Channel restrictions",
-              answer: formatValue(data.channelRestrictions),
-            },
-          ]
-        : []),
-      {
-        question: "Branded second-hand DTC program interest",
-        answer: formatValue(data.brandedDtc),
-      },
-      ...(data.brandedDtc === "Yes" && data.brandedManagement
-        ? [
-            {
-              question: "Preferred management approach",
-              answer: formatValue(data.brandedManagement),
-            },
-          ]
-        : []),
-      {
-        question: "Trade-in program interest",
-        answer: formatValue(data.tradeIn),
-      },
-    ],
-    insight: generateInsight(3, data),
-  };
-
-  const section4: Section = {
-    title: "Value Drivers & Opportunity Assessment",
-    number: 4,
-    expertPerspective:
-      "Strategic value drivers and opportunity assessment reveal optimization potential. Understanding current coverage gaps and inventory constraints enables comprehensive reverse logistics pipeline optimization.",
-    qaPairs: [
-      {
-        question: "Top value driver",
-        answer: formatValue(data.valuePriority),
-      },
-      {
-        question: "Current opportunity capture assessment",
-        answer: formatValue(data.opportunityFeeling),
-      },
-      ...(data.excessInventoryChannel
-        ? [
-            {
-              question: "Excess inventory sales channel",
-              answer: formatValue(data.excessInventoryChannel),
-            },
-            ...(data.excessInventoryChannel === "Off-Priced Retailers (National)" &&
-            data.excessInventoryNational
-              ? [
-                  {
-                    question: "National retailers",
-                    answer: formatValue(data.excessInventoryNational),
-                  },
-                ]
-              : []),
-            ...(data.excessInventoryChannel === "Off-Priced Retailers (Regional)" &&
-            data.excessInventoryRegional
-              ? [
-                  {
-                    question: "Regional retailers",
-                    answer: formatValue(data.excessInventoryRegional),
-                  },
-                ]
-              : []),
-          ]
-        : []),
-      ...(data.excessInventory && !data.excessInventoryChannel
-        ? [
-            {
-              question: "Excess inventory handling",
-              answer: formatValue(data.excessInventory),
-            },
-          ]
-        : []),
-      {
-        question: "Combine inventory & returns strategy",
-        answer: formatValue(data.combineStrategy),
-      },
-    ],
-    insight: generateInsight(4, data),
-  };
-
-  return [section1, section2, section3, section4];
+// Convert value priority to narrative
+const convertValuePriority = (value: string): string => {
+  if (!value || value === "N/A") return "";
+  return `The brand identifies ${value} as a primary driver for the reverse logistics program.`;
 };
 
-// Header component (fixed on every page except cover)
+// Convert opportunity feeling to narrative
+const convertOpportunityFeeling = (value: string): string => {
+  if (value === "Yes") {
+    return "The brand feels it is currently taking advantage of return opportunities.";
+  }
+  if (value === "No") {
+    return "The brand does not feel it is currently taking advantage of return opportunities.";
+  }
+  return "";
+};
+
+// Format numbers with commas
+const formatNumbers = (value: string): string => {
+  if (!value) return "";
+  const num = value.replace(/,/g, "");
+  const parsed = parseInt(num);
+  if (isNaN(parsed)) return value;
+  return parsed.toLocaleString();
+};
+
+
+// Header component (fixed on every page)
 const PageHeader = () => (
   <View style={styles.header} fixed>
     <Text style={styles.logoText}>Nok Recommerce</Text>
@@ -518,130 +277,221 @@ const PageFooter = () => (
   </View>
 );
 
-// Cover page component
-const CoverPage = ({ clientName }: { clientName: string }) => (
-  <Page size="A4" style={styles.coverPage}>
-    <View>
-      <Text style={styles.coverLogo}>Nok Recommerce</Text>
-      <Text style={styles.coverTitle}>
-        Reverse Logistics Strategic Assessment
-      </Text>
-      <Text style={styles.coverDate}>{formatDate()}</Text>
-      {clientName && (
-        <Text style={styles.coverClient}>Prepared for {clientName}</Text>
-      )}
-      <Text style={styles.executiveSummary}>
-        This document was developed to establish a structured understanding of
-        current operations, strategic priorities, and areas of opportunity, and
-        to support informed decision-making around program design and
-        optimization.{"\n\n"}
-        The information captured within reflects a combination of operational
-        inputs and strategic considerations intended to surface efficiencies,
-        identify value creation opportunities, and highlight potential paths for
-        improvement. By organizing these inputs across key functional and
-        commercial dimensions, this document provides a foundation for
-        evaluating both near-term initiatives and longer-term program evolution.{"\n\n"}
-        The purpose of this assessment is not to prescribe a single solution,
-        but to enable a thoughtful, collaborative discussion around priorities,
-        constraints, and success metrics. The insights generated are designed to
-        inform a tailored approach that aligns operational execution with
-        broader business objectives.{"\n\n"}
-        The next step is a review and validation of the information presented,
-        followed by a working session to explore implications, refine
-        assumptions, and determine appropriate next actions. This process is
-        intended to support scalable, data-informed decisions and to ensure that
-        any recommended initiatives are practical, aligned, and positioned for
-        long-term success.
-      </Text>
-    </View>
-    <View>
-      <Text style={styles.coverFooter}>Prepared by Nok Recommerce</Text>
-    </View>
+// Page 1: Introduction & Executive Summary
+const Page1Intro = ({ clientName }: { clientName: string }) => (
+  <Page size="A4" style={styles.contentPage} break>
+    <PageHeader />
+    <PageFooter />
+    <Text style={styles.mainSectionTitle}>1.0 Introduction & Executive Summary</Text>
+    
+    <Text style={styles.subSectionTitle}>1.1 Company Overview</Text>
+    <Text style={styles.companyName}>
+      Company Name: {clientName || "Client"}
+    </Text>
+    
+    <Text style={styles.subSectionTitle}>1.2 Project Purpose</Text>
+    <Text style={styles.bodyText}>
+      This document was developed to establish a structured understanding of
+      current operations, strategic priorities, and areas of opportunity. The
+      information captured reflects a combination of operational inputs intended
+      to surface efficiencies and highlight potential paths for improvement. The
+      purpose of this assessment is to enable a collaborative discussion around
+      priorities, constraints, and success metrics to ensure recommended
+      initiatives are practical and positioned for long-term success.
+    </Text>
   </Page>
 );
 
-// Q&A row component - prevent question/answer from splitting
-const QARow = ({ question, answer }: QAPair) => (
-  <View style={styles.qaContainer} wrap={false}>
-    <View style={styles.questionColumn}>
-      <Text style={styles.questionText}>{question}</Text>
-    </View>
-    <View style={styles.answerColumn}>
-      <Text style={styles.answerText}>{answer}</Text>
-    </View>
-  </View>
+// Page 2: Program Goals & Vision
+const Page2Goals = ({ data }: { data: RfpFormValues }) => (
+  <Page size="A4" style={styles.contentPage} break>
+    <PageHeader />
+    <PageFooter />
+    <Text style={styles.mainSectionTitle}>2.0 Program Goals & Vision</Text>
+    
+    <Text style={styles.subSectionTitle}>2.1 Strategic Objectives</Text>
+    {data.valuePriority && (
+      <Text style={styles.bodyText}>
+        {convertValuePriority(data.valuePriority)}
+      </Text>
+    )}
+    {data.opportunityFeeling && (
+      <Text style={styles.bodyText}>
+        {convertOpportunityFeeling(data.opportunityFeeling)}
+      </Text>
+    )}
+    {data.combineStrategy && data.combineStrategy !== "N/A" && (
+      <Text style={styles.bodyText}>
+        {data.combineStrategy === "Yes"
+          ? "The brand is interested in combining excess inventory strategy with returns to create a broad recommerce strategy."
+          : "The brand is not currently interested in combining excess inventory strategy with returns."}
+      </Text>
+    )}
+  </Page>
 );
 
-// Section component
-const SectionContent = ({ section }: { section: Section }) => (
-  <View style={styles.section}>
-    <Text style={styles.sectionTitle}>
-      {section.number}. {section.title}
-    </Text>
-    {section.expertPerspective && (
-      <Text style={styles.expertPerspective}>{section.expertPerspective}</Text>
+// Page 3: Scope of Work
+const Page3Scope = ({ data }: { data: RfpFormValues }) => (
+  <Page size="A4" style={styles.contentPage} break>
+    <PageHeader />
+    <PageFooter />
+    <Text style={styles.mainSectionTitle}>3.0 Scope of Work</Text>
+    
+    <Text style={styles.subSectionTitle}>3.1 Returns Management</Text>
+    {data.returnsPerYear && (
+      <Text style={styles.bodyText}>
+        Annual return volume: {formatNumbers(data.returnsPerYear)} returns per
+        year.
+      </Text>
     )}
-    {section.qaPairs.map((qa, index) => (
-      <QARow key={index} question={qa.question} answer={qa.answer} />
-    ))}
-    {section.insight && (
-      <Text style={styles.insightText}>{section.insight}</Text>
+    {data.seasonality && (
+      <Text style={styles.bodyText}>
+        Seasonality pattern: {data.seasonality}.
+      </Text>
     )}
-  </View>
+    {data.currentReturnsHandling && data.currentReturnsHandling !== "N/A" && (
+      <Text style={styles.bodyText}>
+        For returns that are sent back, the current process:{" "}
+        {data.currentReturnsHandling}
+      </Text>
+    )}
+    {data.returnsHandling && data.returnsHandling !== "N/A" && (
+      <Text style={styles.bodyText}>
+        Returns handling process: {data.returnsHandling}
+      </Text>
+    )}
+    
+    <Text style={styles.subSectionTitle}>3.2 Retail & Recommerce Strategy</Text>
+    {data.sellsIntoRetailers && (
+      <Text style={styles.bodyText}>
+        {data.sellsIntoRetailers === "Yes"
+          ? "The brand sells into retailers."
+          : "The brand does not sell into retailers."}
+      </Text>
+    )}
+    {data.sellsIntoRetailers === "Yes" && data.retailerProgram && (
+      <Text style={styles.bodyText}>
+        Retailer program: {expandAcronym(data.retailerProgram)}.
+      </Text>
+    )}
+    {data.interestedChannels && data.interestedChannels.length > 0 && (
+      <Text style={styles.bodyText}>
+        Interested recommerce channels:{" "}
+        {expandAcronym(data.interestedChannels.join(", "))}.
+      </Text>
+    )}
+    {data.channelRestrictions && data.channelRestrictions !== "N/A" && (
+      <Text style={styles.bodyText}>
+        Channel restrictions: {data.channelRestrictions}.
+      </Text>
+    )}
+    {data.salesSplitDtc !== undefined && (
+      <Text style={styles.bodyText}>
+        Sales split: {data.salesSplitDtc}% DTC, {100 - data.salesSplitDtc}%
+        retail.
+      </Text>
+    )}
+  </Page>
 );
 
-// Strategic Considerations section component
-const StrategicConsiderationsSection = () => (
-  <View style={styles.strategicSection}>
-    <Text style={styles.sectionTitle}>
-      5. Strategic Considerations & Next Steps
+// Page 4: Technology & Strategic Considerations
+const Page4Tech = ({ data }: { data: RfpFormValues }) => (
+  <Page size="A4" style={styles.contentPage} break>
+    <PageHeader />
+    <PageFooter />
+    <Text style={styles.mainSectionTitle}>
+      4.0 Technology & Strategic Considerations
     </Text>
-    <Text style={styles.strategicIntro}>
-      This document serves as a foundation for evaluating program design and
-      strategic direction.
+    
+    <Text style={styles.subSectionTitle}>4.1 Implementation Framework</Text>
+    {data.excessInventoryChannel && (
+      <Text style={styles.bodyText}>
+        Excess inventory sales channel: {data.excessInventoryChannel}.
+        {data.excessInventoryChannel === "Off-Priced Retailers (National)" &&
+          data.excessInventoryNational &&
+          ` National retailers: ${data.excessInventoryNational}.`}
+        {data.excessInventoryChannel === "Off-Priced Retailers (Regional)" &&
+          data.excessInventoryRegional &&
+          ` Regional retailers: ${data.excessInventoryRegional}.`}
+      </Text>
+    )}
+    {data.tradeIn && (
+      <Text style={styles.bodyText}>
+        {data.tradeIn === "Yes"
+          ? "The brand is interested in a Trade-In program."
+          : "The brand is not currently interested in a Trade-In program."}
+      </Text>
+    )}
+    {data.brandedDtc && (
+      <Text style={styles.bodyText}>
+        {data.brandedDtc === "Yes"
+          ? `The brand is interested in a branded second-hand DTC program.${
+              data.brandedManagement
+                ? ` Preferred management approach: ${data.brandedManagement}.`
+                : ""
+            }`
+          : "The brand is not currently interested in a branded second-hand DTC program."}
+      </Text>
+    )}
+    
+    <Text style={styles.subSectionTitle}>4.2 Strategic Insights</Text>
+    <Text style={styles.italicText}>
+      Strategic Context: The intersection of annual return volumes and existing
+      retail program structures establishes the baseline for required facility
+      throughput.
     </Text>
-    <View style={{ marginTop: 12, marginBottom: 12 }}>
-      <Text style={styles.nextStepItem}>
-        1. Internal Review & Validation
+    <Text style={styles.italicText}>
+      Market Consideration: Defined channel restrictions require a multi-tiered
+      framework that protects primary market pricing while maximizing inventory
+      recovery.
+    </Text>
+  </Page>
+);
+
+// Page 5: Evaluation Criteria & Next Steps
+const Page5Evaluation = () => (
+  <Page size="A4" style={styles.contentPage} break>
+    <PageHeader />
+    <PageFooter />
+    <Text style={styles.mainSectionTitle}>
+      5.0 Evaluation Criteria & Next Steps
+    </Text>
+    
+    <Text style={styles.subSectionTitle}>5.1 Evaluation Framework</Text>
+    <View style={styles.bulletList}>
+      <Text style={styles.bulletPoint}>
+        • Strategic Alignment (30%)
       </Text>
-      <Text style={styles.nextStepItem}>
-        2. Data Gap Analysis
+      <Text style={styles.bulletPoint}>
+        • Capability & Experience (30%)
       </Text>
-      <Text style={styles.nextStepItem}>
-        3. Strategic Alignment Session
+      <Text style={styles.bulletPoint}>
+        • Technology & Innovation (20%)
+      </Text>
+      <Text style={styles.bulletPoint}>
+        • Pricing & Value (20%)
       </Text>
     </View>
-    <Text style={styles.strategicFooter}>
-      A Nok expert (Maddy) will reach out to facilitate a review of these
-      findings and explore alignment with broader business objectives.
+    
+    <Text style={styles.subSectionTitle}>5.2 Next Steps</Text>
+    <Text style={styles.bodyText}>
+      A Nok expert (Maddy) will reach out shortly to facilitate a review of
+      these findings, validate the assumptions captured here, and explore
+      alignment with broader business objectives. This process is intended to
+      support scalable, data-informed decisions.
     </Text>
-  </View>
+  </Page>
 );
 
 // Main PDF component
 export function RfpPdf({ data }: { data: RfpFormValues }) {
-  const sections = buildSections(data);
-
   return (
     <Document>
-      {/* Cover Page */}
-      <CoverPage clientName={data.name || ""} />
-
-      {/* Each section on its own page */}
-      {sections.map((section) => (
-        <Page key={section.number} size="A4" style={styles.contentPage}>
-          <PageHeader />
-          <PageFooter />
-          <SectionContent section={section} />
-        </Page>
-      ))}
-      
-      {/* Strategic Considerations on its own page */}
-      <Page size="A4" style={styles.contentPage}>
-        <PageHeader />
-        <PageFooter />
-        <StrategicConsiderationsSection />
-      </Page>
+      <Page1Intro clientName={data.name || ""} />
+      <Page2Goals data={data} />
+      <Page3Scope data={data} />
+      <Page4Tech data={data} />
+      <Page5Evaluation />
     </Document>
   );
 }

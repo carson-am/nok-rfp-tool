@@ -712,7 +712,7 @@ export default function RfpFormPage() {
                     fileName={
                       formValues.name.trim()
                         ? `${formValues.name.trim().replace(/\s+/g, "-")}-RFP.pdf`
-                        : "RFP.pdf"
+                        : "Client-RFP.pdf"
                     }
                   >
                     {({ loading }) => (
