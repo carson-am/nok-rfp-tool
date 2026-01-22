@@ -54,6 +54,7 @@ const formatNumberWithCommas = (value: string): string => {
 };
 
 const initialValues: RfpFormValues = {
+  companyName: "",
   returnsPerYear: "",
   seasonality: "Mostly flat",
   sellsIntoRetailers: "",
@@ -133,6 +134,7 @@ export default function RfpFormPage() {
     if (currentStep.id === "lead") return true;
     const baseRequired: Record<StepId, (keyof RfpFormValues)[]> = {
       general: [
+        "companyName",
         "returnsPerYear",
         "seasonality",
         "sellsIntoRetailers",
@@ -260,6 +262,15 @@ export default function RfpFormPage() {
 
             {currentStep.id === "general" && (
               <div className="space-y-4">
+                <Field label="Company Name">
+                  <input
+                    type="text"
+                    className="input"
+                    value={formValues.companyName}
+                    onChange={(e) => updateField("companyName", e.target.value)}
+                  />
+                </Field>
+
                 <Field
                   label="How many returns do you get per year?"
                   helper="Approximate annualized return count."

@@ -7,6 +7,7 @@ import {
 } from "@react-pdf/renderer";
 
 export type RfpFormValues = {
+  companyName: string;
   returnsPerYear: string;
   seasonality: string;
   sellsIntoRetailers: string;
@@ -185,6 +186,19 @@ const styles = StyleSheet.create({
     color: colors.bodyText,
     marginBottom: 16,
   },
+  mainTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: colors.bodyText,
+    marginBottom: 8,
+    marginTop: 0,
+  },
+  subTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.bodyText,
+    marginBottom: 24,
+  },
 });
 
 // Format date for cover page
@@ -279,15 +293,20 @@ const PageFooter = () => (
 );
 
 // Page 1: Introduction & Executive Summary
-const Page1Intro = ({ clientName }: { clientName: string }) => (
+const Page1Intro = ({ companyName, contactName }: { companyName: string; contactName: string }) => (
   <Page size="A4" style={styles.contentPage} break>
     <PageHeader />
     <PageFooter />
+    <Text style={styles.mainTitle}>Request for Proposal</Text>
+    <Text style={styles.subTitle}>Comprehensive Reverse Logistics Partner</Text>
     <Text style={styles.mainSectionTitle}>1.0 Introduction & Executive Summary</Text>
     
     <Text style={styles.subSectionTitle}>1.1 Company Overview</Text>
     <Text style={styles.companyName}>
-      Company Name: {clientName || "Client"}
+      Company Name: {companyName || "N/A"}
+    </Text>
+    <Text style={styles.companyName}>
+      Contact Name: {contactName || "N/A"}
     </Text>
     
     <Text style={styles.subSectionTitle}>1.2 Project Purpose</Text>
@@ -488,7 +507,7 @@ const Page5Evaluation = () => (
 export function RfpPdf({ data }: { data: RfpFormValues }) {
   return (
     <Document>
-      <Page1Intro clientName={data.name || ""} />
+      <Page1Intro companyName={data.companyName || ""} contactName={data.name || ""} />
       <Page2Goals data={data} />
       <Page3Scope data={data} />
       <Page4Tech data={data} />
