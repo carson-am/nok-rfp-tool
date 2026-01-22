@@ -42,6 +42,7 @@ const colors = {
   bodyText: "#000000", // Black
   bodyTextAlt: "#0A0E27", // Deep navy
   muted: "#666666", // Gray for muted text
+  border: "#334155",
 };
 
 const styles = StyleSheet.create({
