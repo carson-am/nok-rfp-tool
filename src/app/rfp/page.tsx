@@ -270,56 +270,68 @@ export default function RfpFormPage() {
 
             {currentStep.id === "general" && (
               <div className="space-y-4">
-                <Field label="Full Name">
-                  <input
-                    type="text"
-                    className="input"
-                    value={formValues.name}
-                    onChange={(e) => updateField("name", e.target.value)}
-                  />
-                </Field>
+                <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+                  <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-4">
+                    CONTACT INFORMATION
+                  </p>
+                  <div className="space-y-4">
+                    <Field label="Full Name">
+                      <input
+                        type="text"
+                        className="input"
+                        value={formValues.name}
+                        onChange={(e) => updateField("name", e.target.value)}
+                      />
+                    </Field>
 
-                <Field label="Company Name">
-                  <input
-                    type="text"
-                    className="input"
-                    value={formValues.companyName}
-                    onChange={(e) => updateField("companyName", e.target.value)}
-                  />
-                </Field>
+                    <Field label="Company Name">
+                      <input
+                        type="text"
+                        className="input"
+                        value={formValues.companyName}
+                        onChange={(e) => updateField("companyName", e.target.value)}
+                      />
+                    </Field>
 
-                <Field label="Email">
-                  <input
-                    type="email"
-                    className="input"
-                    value={formValues.email}
-                    onChange={(e) => {
-                      updateField("email", e.target.value);
-                      // Reset saved state if email becomes invalid
-                      if (!isValidEmail(e.target.value)) {
-                        setEmailSaved(false);
-                      }
-                    }}
-                    onBlur={(e) => {
-                      const emailValue = e.target.value;
-                      if (isValidEmail(emailValue)) {
-                        setEmailSaved(true);
-                      } else {
-                        setEmailSaved(false);
-                      }
-                    }}
-                  />
-                  {emailSaved && isValidEmail(formValues.email) && (
-                    <p className="text-xs text-slate-400 mt-1">
-                      Saved. We'll email you a copy too.
-                    </p>
-                  )}
-                </Field>
+                    <Field label="Email">
+                      <input
+                        type="email"
+                        className="input"
+                        value={formValues.email}
+                        onChange={(e) => {
+                          updateField("email", e.target.value);
+                          // Reset saved state if email becomes invalid
+                          if (!isValidEmail(e.target.value)) {
+                            setEmailSaved(false);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const emailValue = e.target.value;
+                          if (isValidEmail(emailValue)) {
+                            setEmailSaved(true);
+                          } else {
+                            setEmailSaved(false);
+                          }
+                        }}
+                      />
+                      {emailSaved && isValidEmail(formValues.email) && (
+                        <p className="text-xs text-slate-400 mt-1">
+                          Saved. We'll email you a copy too.
+                        </p>
+                      )}
+                    </Field>
+                  </div>
+                </div>
 
-                <Field
-                  label="How many returns do you get per year?"
-                  helper="Approximate annualized return count."
-                >
+                <div className="mt-10">
+                  <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-4">
+                    OPERATIONAL BASELINE
+                  </p>
+                  <div className="space-y-4">
+                    <Field
+                      label="How many returns do you get per year?"
+                      helper="Approximate annualized return count."
+                    >
                   <input
                     type="text"
                     inputMode="numeric"
@@ -496,6 +508,8 @@ export default function RfpFormPage() {
                     </div>
                   </Field>
                 )}
+                  </div>
+                </div>
               </div>
             )}
 
