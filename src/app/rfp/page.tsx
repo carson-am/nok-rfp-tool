@@ -53,6 +53,11 @@ const formatNumberWithCommas = (value: string): string => {
   return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+// Email validation helper
+const isValidEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
 const initialValues: RfpFormValues = {
   companyName: "",
   returnsPerYear: "",
@@ -100,6 +105,7 @@ const valueOptions = [
 export default function RfpFormPage() {
   const [stepIndex, setStepIndex] = useState(0);
   const [formValues, setFormValues] = useState<RfpFormValues>(initialValues);
+  const [emailSaved, setEmailSaved] = useState(false);
 
   const currentStep = steps[stepIndex];
   const progress = ((stepIndex + 1) / steps.length) * 100;
@@ -134,7 +140,9 @@ export default function RfpFormPage() {
     if (currentStep.id === "lead") return true;
     const baseRequired: Record<StepId, (keyof RfpFormValues)[]> = {
       general: [
+        "name",
         "companyName",
+        "email",
         "returnsPerYear",
         "seasonality",
         "sellsIntoRetailers",
@@ -262,6 +270,15 @@ export default function RfpFormPage() {
 
             {currentStep.id === "general" && (
               <div className="space-y-4">
+                <Field label="Full Name">
+                  <input
+                    type="text"
+                    className="input"
+                    value={formValues.name}
+                    onChange={(e) => updateField("name", e.target.value)}
+                  />
+                </Field>
+
                 <Field label="Company Name">
                   <input
                     type="text"
@@ -269,6 +286,34 @@ export default function RfpFormPage() {
                     value={formValues.companyName}
                     onChange={(e) => updateField("companyName", e.target.value)}
                   />
+                </Field>
+
+                <Field label="Email">
+                  <input
+                    type="email"
+                    className="input"
+                    value={formValues.email}
+                    onChange={(e) => {
+                      updateField("email", e.target.value);
+                      // Reset saved state if email becomes invalid
+                      if (!isValidEmail(e.target.value)) {
+                        setEmailSaved(false);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const emailValue = e.target.value;
+                      if (isValidEmail(emailValue)) {
+                        setEmailSaved(true);
+                      } else {
+                        setEmailSaved(false);
+                      }
+                    }}
+                  />
+                  {emailSaved && isValidEmail(formValues.email) && (
+                    <p className="text-xs text-slate-400 mt-1">
+                      Saved. We'll email you a copy too.
+                    </p>
+                  )}
                 </Field>
 
                 <Field
@@ -643,26 +688,35 @@ export default function RfpFormPage() {
 
             {currentStep.id === "lead" && (
               <div className="space-y-4">
-                <Field
-                  label="Before we generate your RFP, who should receive it?"
-                  helper="We'll include these details in the footer for continuity."
-                >
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <input
-                      className="input"
-                      placeholder="Full name"
-                      value={formValues.name}
-                      onChange={(e) => updateField("name", e.target.value)}
-                    />
-                    <input
-                      className="input"
-                      type="email"
-                      placeholder="Email"
-                      value={formValues.email}
-                      onChange={(e) => updateField("email", e.target.value)}
-                    />
+                <div className="rounded-xl border border-white/10 bg-slate-900/40 p-4 text-sm text-slate-200">
+                  <p className="text-base font-bold text-white mb-4">
+                    Review Your Details
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-slate-200">
+                        RFP will be sent to: <span className="text-white font-semibold">{formValues.email || "N/A"}</span>
+                      </p>
+                      <button
+                        onClick={() => setStepIndex(0)}
+                        className="text-xs text-blue-400 hover:text-blue-300 underline"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-slate-200">
+                        Primary Contact: <span className="text-white font-semibold">{formValues.name || "N/A"}</span>
+                      </p>
+                      <button
+                        onClick={() => setStepIndex(0)}
+                        className="text-xs text-blue-400 hover:text-blue-300 underline"
+                      >
+                        Edit
+                      </button>
+                    </div>
                   </div>
-                </Field>
+                </div>
 
                 <div className="rounded-xl border border-white/10 bg-slate-900/40 p-4 text-sm text-slate-200">
                   <p className="text-base font-bold text-white">
@@ -731,7 +785,7 @@ export default function RfpFormPage() {
                         className="btn primary w-full sm:w-auto disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={!leadReady || loading}
                       >
-                        {loading ? "Preparing PDF..." : "Download PDF"}
+                        {loading ? "Preparing PDF..." : "Confirm & Generate RFP"}
                       </button>
                     )}
                   </PDFDownloadLink>
